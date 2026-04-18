@@ -10,7 +10,7 @@ def get_base64_of_bin_file(bin_file):
     return base64.b64encode(data).decode()
 
 try:
-    bin_str = get_base64_of_bin_file('background_hijau.jpg') 
+    bin_str = get_base64_of_bin_file('background_hijau.jpeg') 
     
     # PERHATIKAN: Semua kode CSS harus ada di dalam tanda kutip f''' dan ''' ini
     page_bg_img = f'''
@@ -29,7 +29,7 @@ try:
 
     /* 2. Menargetkan seluruh area aplikasi untuk Background Gambar */
     .stApp {{
-        background-image: url("data:image/jpg;base64,{bin_str}");
+        background-image: url("data:image/jpeg;base64,{bin_str}");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -128,10 +128,10 @@ elif halaman == "LKPD Refleksi":
         """, unsafe_allow_html=True)
 
     try:
-        # PENTING: Pastikan kamu mengunggah file bernama bagian_1.jpg, bagian_2.jpg, dan bagian_3.jpg ke GitHub
+        # PENTING: Pastikan kamu mengunggah file bernama bagian_1.jpeg, bagian_2.jpeg, dan bagian_3.jpeg ke GitHub
         
         # Merakit Bagian 1: Soal Gambar
-        st.image("bagian_1.jpg", use_container_width=True)
+        st.image("bagian_1.jpeg", use_container_width=True)
         col1, col2 = st.columns(2)
         with col1:
             jawaban_3 = st.text_input("Jawaban Gambar (3)", label_visibility="collapsed") 
@@ -140,7 +140,7 @@ elif halaman == "LKPD Refleksi":
         st.write("") 
 
         # Merakit Bagian 2: Esai
-        st.image("bagian_2.jpg", use_container_width=True)
+        st.image("bagian_2.jpeg", use_container_width=True)
         jawaban_esai = st.text_area(
             "Jawaban Esai", 
             label_visibility="collapsed", 
@@ -150,7 +150,7 @@ elif halaman == "LKPD Refleksi":
         st.write("")
 
         # Merakit Bagian 3: Penutup
-        st.image("bagian_3.jpg", use_container_width=True)
+        st.image("bagian_3.jpeg", use_container_width=True)
 
         # Tombol Kirim
         if st.button("Kumpulkan Jawaban"):
@@ -160,4 +160,4 @@ elif halaman == "LKPD Refleksi":
                 st.warning("Jangan lupa isi penjelasan refleksinya ya.")
                 
     except FileNotFoundError:
-        st.error("⚠️ Gambar bagian_1.jpg, bagian_2.jpg, atau bagian_3.jpg belum di-upload ke GitHub! Jangan lupa di-upload ya.")
+        st.error("⚠️ Gambar bagian_1.jpeg, bagian_2.jpeg, atau bagian_3.jpeg belum di-upload ke GitHub! Jangan lupa di-upload ya.")
