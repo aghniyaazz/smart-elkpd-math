@@ -1,58 +1,71 @@
 import streamlit as st
-import pandas as pd
-from sklearn.cluster import KMeans
-import numpy as np
 
-# Konfigurasi Halaman
-st.set_page_config(page_title="Smart E-LKPD Matematika", page_icon="🌱")
+# 1. Konfigurasi Halaman (Wajib paling atas)
+st.set_page_config(page_title="ClusMath", page_icon="🌿", layout="centered")
 
-st.title("🌱 Smart E-LKPD: Personalized Math Learning")
-st.write("Inovasi Pembelajaran Digital Ramah Lingkungan berbasis Data Mining")
+# 2. Custom CSS untuk Background Hijau & Desain Font
+st.markdown("""
+    <style>
+    /* Mengubah background utama menjadi hijau muda yang segar */
+    .stApp {
+        background-color: #f2fbf4; 
+    }
+    
+    /* Desain Judul ClusMath */
+    .judul-utama {
+        font-size: 70px;
+        font-weight: 900;
+        color: #2e7d32; /* Hijau tua */
+        text-align: center;
+        font-family: 'Trebuchet MS', sans-serif;
+        margin-bottom: -15px;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    /* Desain Sub-Judul */
+    .sub-judul {
+        font-size: 22px;
+        color: #4caf50;
+        text-align: center;
+        margin-bottom: 30px;
+        font-family: 'Arial', sans-serif;
+        font-weight: bold;
+    }
+    
+    /* Desain Ikon Aritmetika Sosial */
+    .ikon-aritmetika {
+        font-size: 45px;
+        text-align: center;
+        letter-spacing: 20px;
+        margin-bottom: 20px;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-# --- Bagian Input Data (Simulasi Identifikasi Gaya Belajar VAK) ---
-st.header("1. Identifikasi Profil Belajar")
-st.info("Siswa mengisi kuesioner singkat untuk menentukan gaya belajar terbaik.")
+# 3. Menampilkan Header & Judul
+st.markdown('<div class="judul-utama">ClusMath</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-judul">🌿 Smart E-LKPD Aritmetika Sosial & Data Mining 🌿</div>', unsafe_allow_html=True)
 
-with st.expander("Klik untuk isi data gaya belajar"):
-    v = st.slider("Seberapa suka kamu belajar dengan Gambar/Video? (Visual)", 0, 10, 5)
-    a = st.slider("Seberapa suka kamu belajar dengan Mendengarkan? (Auditori)", 0, 10, 5)
-    k = st.slider("Seberapa suka kamu belajar dengan Praktik/Gerak? (Kinestetik)", 0, 10, 5)
+# 4. Elemen Visual Aritmetika Sosial (Uang, Diskon, Belanja, Profit)
+st.markdown('<div class="ikon-aritmetika">💰 🏷️ 🛒 📈 💸</div>', unsafe_allow_html=True)
 
-# --- Proses Data Mining (K-Means Clustering) ---
-# Data dummy untuk 'melatih' cluster sederhana
-X = np.array([[10, 2, 2], [2, 10, 2], [2, 2, 10], [8, 3, 3], [3, 8, 3], [3, 3, 8]])
-kmeans = KMeans(n_clusters=3, random_state=0).fit(X)
+st.write("---")
 
-# Prediksi cluster untuk input siswa
-user_data = np.array([[v, a, k]])
-cluster_result = kmeans.predict(user_data)[0]
+# 5. Form Input Nama dan Kelas (Disusun ke Samping)
+st.markdown("### 👤 Silakan Isi Identitasmu")
+col1, col2 = st.columns(2)
 
-# --- Output Diferensiasi (Smart E-LKPD) ---
-st.header("2. Materi Terpersonalisasi (Smart Content)")
+with col1:
+    nama = st.text_input("Nama Lengkap", placeholder="Contoh: Aghniya Izzati")
+with col2:
+    kelas = st.text_input("Kelas", placeholder="Contoh: VIII A")
 
-if cluster_result == 0: # Cluster Visual
-    st.success("Tipe Belajar: **Visual**")
-    st.write("### 📐 Materi: Geometri Bidang Datar")
-    st.video("https://www.youtube.com/watch?v=dQw4w9WgXcQ") # Ganti dengan link video edukasi
-    st.write("Silakan amati infografis di bawah ini untuk memahami konsep luas.")
+st.write("")
 
-elif cluster_result == 1: # Cluster Auditori
-    st.success("Tipe Belajar: **Auditori**")
-    st.write("### 📐 Materi: Logika Matematika")
-    st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3") # Ganti dengan link podcast edukasi
-    st.write("Dengarkan penjelasan konsep implikasi melalui audio di atas.")
-
-else: # Cluster Kinestetik
-    st.success("Tipe Belajar: **Kinestetik**")
-    st.write("### 📐 Materi: Statistik Terapan")
-    st.write("Ayo lakukan simulasi interaktif! Geser slider di bawah untuk melihat perubahan grafik secara real-time.")
-    chart_data = pd.DataFrame(np.random.randn(20, 3), columns=['Data A', 'Data B', 'Data C'])
-    st.line_chart(chart_data)
-
-# --- Sisi Green Competition ---
-st.sidebar.header("Green Impact")
-st.sidebar.write("""
-- **Zero Paper:** Mengeliminasi penggunaan LKS cetak.
-- **Efisiensi Energi:** Konten yang presisi mengurangi waktu penggunaan perangkat yang sia-sia.
-- **Sustainable Edu:** Digitalisasi pendidikan yang inklusif.
-""")
+# 6. Tombol Aksi
+if st.button("🚀 Mulai Belajar Terpersonalisasi", use_container_width=True):
+    if nama and kelas:
+        st.success(f"Halo, {nama} dari kelas {kelas}! Profil belajarmu sedang dianalisis... (Ini simulasi tempat Clustering K-Means akan berjalan nantinya)")
+        st.balloons() # Efek animasi balon saat berhasil
+    else:
+        st.warning("Eits, pastikan kamu sudah mengisi Nama dan Kelas ya sebelum memulai!")
