@@ -140,4 +140,24 @@ elif halaman == "LKPD Refleksi":
         st.write("") 
 
         # Merakit Bagian 2: Esai
-        st.image("bagian_2.jpg", use_container_
+        st.image("bagian_2.jpg", use_container_width=True)
+        jawaban_esai = st.text_area(
+            "Jawaban Esai", 
+            label_visibility="collapsed", 
+            height=150, 
+            placeholder="Ketik jawabanmu tentang Refleksi dengan bahasamu sendiri di sini..."
+        )
+        st.write("")
+
+        # Merakit Bagian 3: Penutup
+        st.image("bagian_3.jpg", use_container_width=True)
+
+        # Tombol Kirim
+        if st.button("Kumpulkan Jawaban"):
+            if jawaban_esai:
+                st.success("Jawaban refleksi berhasil disimpan! Hebat!")
+            else:
+                st.warning("Jangan lupa isi penjelasan refleksinya ya.")
+                
+    except FileNotFoundError:
+        st.error("⚠️ Gambar bagian_1.jpg, bagian_2.jpg, atau bagian_3.jpg belum di-upload ke GitHub! Jangan lupa di-upload ya.")
