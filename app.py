@@ -1,7 +1,10 @@
 import streamlit as st
 import base64
+import numpy as np
+import pandas as pd
+from sklearn.cluster import KMeans
 
-# 1. Konfigurasi Halaman (Wajib paling atas)
+# 1. Konfigurasi Halaman & Portrait Mode
 st.set_page_config(page_title="ClusMath", page_icon="🌿", layout="centered")
 
 def get_base64_of_bin_file(bin_file):
@@ -10,154 +13,113 @@ def get_base64_of_bin_file(bin_file):
     return base64.b64encode(data).decode()
 
 try:
-    bin_str = get_base64_of_bin_file('background_hijau.jpeg') 
+    # Menggunakan gambar background yang sudah diupload ke GitHub
+    bin_str = get_base64_of_bin_file('background_hijau.jpg') 
     
-    # PERHATIKAN: Semua kode CSS harus ada di dalam tanda kutip f''' dan ''' ini
     page_bg_img = f'''
     <style>
-    /* 1. Memaksa tampilan menjadi Portrait (seperti layar HP) */
     .block-container {{
         max-width: 450px !important;
         padding-top: 2rem;
         padding-bottom: 2rem;
-        background-color: rgba(255, 255, 255, 0.9);
+        background-color: rgba(255, 255, 255, 0.95);
         border-radius: 20px;
         box-shadow: 0px 10px 30px rgba(0,0,0,0.2);
         margin-top: 30px;
         margin-bottom: 30px;
     }}
 
-    /* 2. Menargetkan seluruh area aplikasi untuk Background Gambar */
     .stApp {{
-        background-image: url("data:image/jpeg;base64,{bin_str}");
+        background-image: url("data:image/jpg;base64,{bin_str}");
         background-size: cover;
         background-position: center;
-        background-repeat: no-repeat;
         background-attachment: fixed;
     }}
     
-    /* 3. Desain Judul dan Ikon */
     .judul-utama {{
-        font-size: 75px;
+        font-size: 60px;
         font-weight: 900;
         color: #1a531c;
         text-align: center;
-        font-family: 'Helvetica Neue', sans-serif;
-        margin-bottom: -10px;
         text-shadow: 2px 2px 4px rgba(255,255,255,0.5);
-        background-color: transparent !important;
     }}
     
     .sub-judul {{
-        font-size: 24px;
+        font-size: 20px;
         color: #2e7d32;
         text-align: center;
-        margin-bottom: 30px;
-        font-family: 'Arial', sans-serif;
         font-weight: bold;
-        background-color: transparent !important;
-    }}
-    
-    .ikon-aritmetika {{
-        font-size: 50px;
-        text-align: center;
-        letter-spacing: 25px;
-        margin-bottom: 30px;
-        background-color: transparent !important;
     }}
     </style>
     '''
     st.markdown(page_bg_img, unsafe_allow_html=True)
-    
 except FileNotFoundError:
-    st.error("⚠️ Gambar background tidak ditemukan di GitHub. Pastikan nama filenya sama!")
+    st.warning("⚠️ Background tidak ditemukan, menggunakan mode standar.")
 
+# --- Tampilan Utama ---
+st.markdown('<div class="judul-utama">ClusMath</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-judul">🌿 Smart E-LKPD Aritmetika Sosial 🌿</div>', unsafe_allow_html=True)
+st.write("---")
 
-# --- MEMBUAT MENU NAVIGASI DI SAMPING KIRI ---
-with st.sidebar:
-    st.title("Menu E-LKPD")
-    halaman = st.selectbox("Pilih Halaman:", ["Halaman Utama", "LKPD Refleksi"])
+# --- Identitas Siswa ---
+st.markdown("### 👤 Identitas")
+nama = st.text_input("Nama Lengkap")
+kelas = st.text_input("Kelas")
 
-# ==========================================
-# HALAMAN 1: KODE AWAL KAMU (CLUSMATH)
-# ==========================================
-if halaman == "Halaman Utama":
-    st.markdown('<div class="judul-utama">ClusMath</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-judul">🌿 Smart E-LKPD Aritmetika Sosial & Data Mining 🌿</div>', unsafe_allow_html=True)
-    st.markdown('<div class="ikon-aritmetika">💰 🏷️ 🛒 📈 💸</div>', unsafe_allow_html=True)
-    st.write("---")
+# --- Tes Gaya Belajar VAK ---
+st.markdown("### 🧠 Tes Gaya Belajar")
+st.write("Isilah kuesioner singkat berikut sesuai dirimu (Skala 0-10):")
 
-    st.markdown("### 👤 Silakan Isi Identitasmu")
-    col1, col2 = st.columns(2)
+with st.container():
+    score_v = st.slider("Seberapa mudah kamu memahami materi melalui Gambar/Grafik? (Visual)", 0, 10, 5)
+    score_a = st.slider("Seberapa suka kamu mendengarkan penjelasan langsung/rekaman? (Auditori)", 0, 10, 5)
+    score_k = st.slider("Seberapa suka kamu belajar sambil mempraktikkan/bergerak? (Kinestetik)", 0, 10, 5)
 
-    with col1:
-        nama = st.text_input("Nama Lengkap", placeholder="Contoh: Aghniya Izzati")
-    with col2:
-        kelas = st.text_input("Kelas", placeholder="Contoh: VIII A")
+st.write("")
 
-    st.write("")
-
-    if st.button("🚀 Mulai Belajar Terpersonalisasi", use_container_width=True):
-        if nama and kelas:
-            st.success(f"Halo, {nama} dari kelas {kelas}! Profil belajarmu sedang dianalisis...")
-            st.balloons()
-        else:
-            st.warning("Eits, pastikan kamu sudah mengisi Nama dan Kelas ya sebelum memulai!")
-
-# ==========================================
-# HALAMAN 2: LKPD REFLEKSI (CANVA)
-# ==========================================
-elif halaman == "LKPD Refleksi":
-    # CSS khusus untuk mempercantik kotak input di halaman refleksi
-    st.markdown("""
-        <style>
-        .stTextInput input {
-            border-radius: 8px;
-            border: 2px solid #8B4513; 
-            background-color: white;
-            text-align: center;
-        }
-        .stTextArea textarea {
-            border-radius: 10px;
-            border: 2px solid #8B4513;
-            background-color: #FFF8DC; 
-            font-family: sans-serif;
-            font-size: 15px;
-        }
-        </style>
-        """, unsafe_allow_html=True)
-
-    try:
-        # PENTING: Pastikan kamu mengunggah file bernama bagian_1.jpeg, bagian_2.jpeg, dan bagian_3.jpeg ke GitHub
+# --- Tombol Proses Clustering ---
+if st.button("🚀 Analisis Profil Belajar", use_container_width=True):
+    if nama and kelas:
+        # 1. Menyiapkan Mesin K-Means (Logic Data Mining)
+        # Kita buat 3 pusat klaster (Centroid) sebagai referensi ideal V, A, dan K
+        # Format: [Skor Visual, Skor Auditori, Skor Kinestetik]
+        centroids = np.array([
+            [10, 2, 2], # Ideal Visual
+            [2, 10, 2], # Ideal Auditori
+            [2, 2, 10]  # Ideal Kinestetik
+        ])
         
-        # Merakit Bagian 1: Soal Gambar
-        st.image("bagian_1.jpeg", use_container_width=True)
-        col1, col2 = st.columns(2)
-        with col1:
-            jawaban_3 = st.text_input("Jawaban Gambar (3)", label_visibility="collapsed") 
-        with col2:
-            jawaban_4 = st.text_input("Jawaban Gambar (4)", label_visibility="collapsed")
-        st.write("") 
+        # Inisialisasi model dengan 3 klaster
+        model = KMeans(n_clusters=3, init=centroids, n_init=1)
+        model.fit(centroids) # 'Melatih' model dengan titik ideal
+        
+        # 2. Input data siswa
+        data_siswa = np.array([[score_v, score_a, score_k]])
+        
+        # 3. Prediksi Cluster (Clustering Proses)
+        cluster = model.predict(data_siswa)[0]
+        
+        st.balloons()
+        st.success(f"Analisis Selesai! Berikut profil belajarmu, {nama}:")
 
-        # Merakit Bagian 2: Esai
-        st.image("bagian_2.jpeg", use_container_width=True)
-        jawaban_esai = st.text_area(
-            "Jawaban Esai", 
-            label_visibility="collapsed", 
-            height=150, 
-            placeholder="Ketik jawabanmu tentang Refleksi dengan bahasamu sendiri di sini..."
-        )
-        st.write("")
+        # --- Hasil Skoring & Rekomendasi ---
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Visual", score_v)
+        col2.metric("Auditori", score_a)
+        col3.metric("Kinestetik", score_k)
 
-        # Merakit Bagian 3: Penutup
-        st.image("bagian_3.jpeg", use_container_width=True)
-
-        # Tombol Kirim
-        if st.button("Kumpulkan Jawaban"):
-            if jawaban_esai:
-                st.success("Jawaban refleksi berhasil disimpan! Hebat!")
-            else:
-                st.warning("Jangan lupa isi penjelasan refleksinya ya.")
-                
-    except FileNotFoundError:
-        st.error("⚠️ Gambar bagian_1.jpeg, bagian_2.jpeg, atau bagian_3.jpeg belum di-upload ke GitHub! Jangan lupa di-upload ya.")
+        if cluster == 0:
+            st.info("🎯 **Gaya Belajar: VISUAL**")
+            st.write("Kamu akan lebih cepat paham materi Aritmetika Sosial melalui **Infografis, Video, dan Diagram warna-warni**.")
+        elif cluster == 1:
+            st.info("🎯 **Gaya Belajar: AUDITORI**")
+            st.write("Kamu akan lebih nyaman belajar melalui **Penjelasan Suara, Diskusi, dan Podcast Matematika**.")
+        else:
+            st.info("🎯 **Gaya Belajar: KINESTETIK**")
+            st.write("Kamu cocok belajar materi ini melalui **Simulasi Jual-Beli Interaktif dan Praktik Langsung**.")
+            
+        st.write("---")
+        st.button("📖 Masuk ke Materi E-LKPD")
+        
+    else:
+        st.error("Silakan isi Nama dan Kelas terlebih dahulu!")
