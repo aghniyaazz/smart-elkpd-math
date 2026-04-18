@@ -111,6 +111,17 @@ st.write("")
 # Tombol Aksi
 if st.button("🚀 Mulai Belajar Terpersonalisasi", use_container_width=True):
     if nama and kelas:
+/* Memaksa tampilan menjadi Portrait (seperti layar HP) */
+    .block-container {
+        max-width: 450px !important; /* Lebar maksimal seukuran HP */
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        background-color: rgba(255, 255, 255, 0.9); /* Latar belakang putih transparan untuk area konten */
+        border-radius: 20px; /* Sudut melengkung mirip frame HP */
+        box-shadow: 0px 10px 30px rgba(0,0,0,0.2); /* Efek bayangan agar terlihat timbul 3D */
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
         st.success(f"Halo, {nama} dari kelas {kelas}! Profil belajarmu sedang dianalisis... (Ini simulasi tempat Clustering K-Means akan berjalan nantinya)")
         st.balloons() # Efek animasi balon
     else:
